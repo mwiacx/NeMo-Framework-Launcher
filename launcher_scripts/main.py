@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import math
+import os
 import sys
 
 import hydra
@@ -34,6 +35,7 @@ from nemo_launcher.core.stages import (
     PEFT,
     AdapterLearning,
     Conversion,
+    ConversionHF2NeMo,
     DiffusionModelEvaluation,
     EvalHarnessEvaluation,
     ExternalConversion,
@@ -41,11 +43,10 @@ from nemo_launcher.core.stages import (
     FWInference,
     IA3Learning,
     NeMoEvaluation,
-    PromptLearning,
-    Training,
-    SteerLMRegSFT,
-    ConversionHF2NeMo,
     PostTrainingQuantization,
+    PromptLearning,
+    SteerLMRegSFT,
+    Training,
 )
 from nemo_launcher.core.v2 import stages as stages_v2
 from nemo_launcher.core.v2.config_k8s import K8sClusterConfig
@@ -147,6 +148,10 @@ STR2STAGECLASS = {
 
 @hydra.main(config_path="conf", config_name="config", version_base="1.2")
 def main(cfg: omegaconf.DictConfig):
+
+    assert os.environ.get('NEMO_DIR', "") != "", "NEMO_DIR environment variable must be set"
+    assert os.environ.get('NEMO_MEGATRON_DIR', "") != "", "NEMO_MEGATRON_DIR environment variable must be set"
+
     requested_stages = cfg.get("stages")
 
     dependency = None

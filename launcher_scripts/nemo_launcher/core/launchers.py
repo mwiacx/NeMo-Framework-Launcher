@@ -26,9 +26,9 @@ from typing import Any, Dict, Iterable, List, Optional, Set, Union
 
 import nemo_launcher.utils.job_utils as job_utils
 import yaml
+from hera.workflows import Workflow
 from nemo_launcher.core.logger import logger
 from omegaconf import DictConfig, OmegaConf
-from hera.workflows import Workflow
 
 NEMO_LAUNCHER_CI = os.getenv("NEMO_LAUNCHER_CI", "False").lower() in ("true", "t", "1")
 NEMO_LAUNCHER_DEBUG = os.getenv("NEMO_LAUNCHER_DEBUG", "False").lower() in (
@@ -751,10 +751,11 @@ def _make_sbatch_string(
     # commandline (this will run the function and args specified in the file provided as argument)
     # We pass --output and --error here, because the SBATCH command doesn't work as expected with a filename pattern
     stderr_flags = [] if stderr_to_stdout else ["--error", stderr]
-    container_flags = ["--container-image", container_image] if container_image else []
-    container_flags += (
-        ["--container-mounts", container_mounts] if container_mounts else []
-    )
+    # container_flags = ["--container-image", container_image] if container_image else []
+    # container_flags += (
+    #     ["--container-mounts", container_mounts] if container_mounts else []
+    # )
+    container_flags = []
     if srun_args is None:
         srun_args = []
 

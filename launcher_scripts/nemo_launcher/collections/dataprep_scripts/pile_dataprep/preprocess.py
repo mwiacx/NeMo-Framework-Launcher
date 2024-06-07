@@ -67,23 +67,25 @@ def main(cfg):
     # This compile doesn't seem to do anything. It compiles
     # "helpers.cpython-38-x86_64-linux-gnu.so", but since that file already
     # exists, it doesn't do anything. Force make via: touch helpers.cpp
-    megatron_dir = "/opt/NeMo/nemo/collections/nlp/data/language_modeling/megatron"
+    _nemo_code_path = os.environ.get('NEMO_DIR')
+
+    megatron_dir = f"{_nemo_code_path}/nemo/collections/nlp/data/language_modeling/megatron"
     compiled_helpers_lib = os.path.join(megatron_dir, "compiled_helpers_lib")
     compilecmd = (
-        f"cd /opt/NeMo; git rev-parse HEAD; "
+        f"cd {_nemo_code_path}; git rev-parse HEAD; "
         f"cd {megatron_dir}; "
         f"touch helpers.cpp; make;"
     )
 
     code_path = (
-        "/opt/NeMo/scripts/nlp_language_modeling/preprocess_data_for_megatron.py"
+        f"{_nemo_code_path}/scripts/nlp_language_modeling/preprocess_data_for_megatron.py"
     )
     hf_cache = os.environ.get(
-        "TRANSFORMERS_CACHE", os.environ.get("HF_HOME", "/temp_root/.cache/")
+        "TRANSFORMERS_CACHE", os.environ.get("HF_HOME", "~/.cache/")
     )
     runcmd = (
         f"cd {megatron_dir}; "
-        f'export PYTHONPATH="/opt/NeMo/.:$PYTHONPATH"; '
+        f'export PYTHONPATH="{_nemo_code_path}/.:$PYTHONPATH"; '
         f'export TRANSFORMERS_CACHE="{hf_cache}"; '
         f"python3 {code_path} "
     )

@@ -17,10 +17,13 @@ import functools
 import glob
 import json
 import logging
-import omegaconf
 import os
 import re
 import shutil
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import omegaconf
 from nemo_launcher.core.launchers import AutoLauncher
 from nemo_launcher.utils.data_utils.prepare_squad import (
     prepare_squad_for_fine_tuning,
@@ -28,8 +31,6 @@ from nemo_launcher.utils.data_utils.prepare_squad import (
 )
 from nemo_launcher.utils.job_utils import JobPaths
 from omegaconf import DictConfig, OmegaConf
-from pathlib import Path
-from typing import Any, Dict, List, Optional
 
 __LANGUAGE_MODELS_LIST__ = [
     "gpt3",
@@ -483,7 +484,7 @@ class NemoMegatronStage:
 
     @property
     def _nemo_code_path(self) -> Path:
-        return Path("/opt/NeMo")
+        return Path(os.environ.get('NEMO_DIR'))
 
     @property
     def _data_dir(self) -> Path:
